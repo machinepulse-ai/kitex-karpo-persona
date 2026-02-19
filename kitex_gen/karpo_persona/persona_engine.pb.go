@@ -1254,6 +1254,12 @@ func (x *GetRecordSourcesResponse) GetHasMore() bool {
 type GetRecordHistoryRequest struct {
 	// Record ID (snowflake int64).
 	RecordId int64 `protobuf:"varint,1,opt,name=record_id" json:"record_id,omitempty"`
+
+	// Max entries to return.
+	Limit int32 `protobuf:"varint,2,opt,name=limit" json:"limit,omitempty"`
+
+	// Offset for pagination.
+	Offset int32 `protobuf:"varint,3,opt,name=offset" json:"offset,omitempty"`
 }
 
 func (x *GetRecordHistoryRequest) Reset() { *x = GetRecordHistoryRequest{} }
@@ -1267,6 +1273,20 @@ func (x *GetRecordHistoryRequest) Unmarshal(in []byte) error { return prutal.Unm
 func (x *GetRecordHistoryRequest) GetRecordId() int64 {
 	if x != nil {
 		return x.RecordId
+	}
+	return 0
+}
+
+func (x *GetRecordHistoryRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetRecordHistoryRequest) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
 	}
 	return 0
 }
@@ -1367,6 +1387,9 @@ type GetRecordHistoryResponse struct {
 
 	// Total number of entries.
 	Total int32 `protobuf:"varint,2,opt,name=total" json:"total,omitempty"`
+
+	// Whether more entries exist beyond this page.
+	HasMore bool `protobuf:"varint,3,opt,name=has_more" json:"has_more,omitempty"`
 }
 
 func (x *GetRecordHistoryResponse) Reset() { *x = GetRecordHistoryResponse{} }
@@ -1389,6 +1412,13 @@ func (x *GetRecordHistoryResponse) GetTotal() int32 {
 		return x.Total
 	}
 	return 0
+}
+
+func (x *GetRecordHistoryResponse) GetHasMore() bool {
+	if x != nil {
+		return x.HasMore
+	}
+	return false
 }
 
 // Request to get statistics for a user.
