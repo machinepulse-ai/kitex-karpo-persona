@@ -994,6 +994,12 @@ func (x *RecordDetail) GetCreatedAt() string {
 type GetRecordsResponse struct {
 	// List of records.
 	Records []*RecordDetail `protobuf:"bytes,1,rep,name=records" json:"records,omitempty"`
+
+	// Total number of records matching the filter.
+	Total int32 `protobuf:"varint,2,opt,name=total" json:"total,omitempty"`
+
+	// Whether more records exist beyond this page.
+	HasMore bool `protobuf:"varint,3,opt,name=has_more" json:"has_more,omitempty"`
 }
 
 func (x *GetRecordsResponse) Reset() { *x = GetRecordsResponse{} }
@@ -1007,6 +1013,20 @@ func (x *GetRecordsResponse) GetRecords() []*RecordDetail {
 		return x.Records
 	}
 	return nil
+}
+
+func (x *GetRecordsResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetRecordsResponse) GetHasMore() bool {
+	if x != nil {
+		return x.HasMore
+	}
+	return false
 }
 
 // Request to search records by vector similarity.
