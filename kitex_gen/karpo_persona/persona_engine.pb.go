@@ -134,6 +134,77 @@ func (x *Message) GetContent() []*ContentPart {
 	return nil
 }
 
+// Configuration for a single pipeline step.
+// Provided by the caller (persona-api) from published pipeline versions.
+type StepConfig struct {
+	// Step identifier, e.g. "extract_records", "dedup_check".
+	StepId string `protobuf:"bytes,1,opt,name=step_id" json:"step_id,omitempty"`
+
+	// Step type: "rule", "llm", or "rule_llm".
+	StepType string `protobuf:"bytes,2,opt,name=step_type" json:"step_type,omitempty"`
+
+	// LLM model identifier, e.g. "openai/gpt-4o-mini".
+	Model string `protobuf:"bytes,3,opt,name=model" json:"model,omitempty"`
+
+	// LLM sampling temperature (0.0-1.0).
+	Temperature float64 `protobuf:"fixed64,4,opt,name=temperature" json:"temperature,omitempty"`
+
+	// Maximum tokens for LLM response.
+	MaxTokens int32 `protobuf:"varint,5,opt,name=max_tokens" json:"max_tokens,omitempty"`
+
+	// Prompt template blocks keyed by block name (task, rules, examples, context, output, input).
+	// Values are Go text/template strings with variables like {{ .Query }}.
+	PromptBlocks map[string]string `protobuf:"bytes,6,rep,name=prompt_blocks" json:"prompt_blocks,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+}
+
+func (x *StepConfig) Reset() { *x = StepConfig{} }
+
+func (x *StepConfig) Marshal(in []byte) ([]byte, error) { return prutal.MarshalAppend(in, x) }
+
+func (x *StepConfig) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
+
+func (x *StepConfig) GetStepId() string {
+	if x != nil {
+		return x.StepId
+	}
+	return ""
+}
+
+func (x *StepConfig) GetStepType() string {
+	if x != nil {
+		return x.StepType
+	}
+	return ""
+}
+
+func (x *StepConfig) GetModel() string {
+	if x != nil {
+		return x.Model
+	}
+	return ""
+}
+
+func (x *StepConfig) GetTemperature() float64 {
+	if x != nil {
+		return x.Temperature
+	}
+	return 0
+}
+
+func (x *StepConfig) GetMaxTokens() int32 {
+	if x != nil {
+		return x.MaxTokens
+	}
+	return 0
+}
+
+func (x *StepConfig) GetPromptBlocks() map[string]string {
+	if x != nil {
+		return x.PromptBlocks
+	}
+	return nil
+}
+
 // Request to absorb conversation messages into memory.
 type AbsorbRequest struct {
 	// User ID (snowflake int64).
@@ -153,6 +224,10 @@ type AbsorbRequest struct {
 
 	// Enable debug trace output.
 	Debug bool `protobuf:"varint,6,opt,name=debug" json:"debug,omitempty"`
+
+	// Pipeline step configurations resolved from published pipeline version.
+	// Required — engine will reject requests without step configs.
+	StepConfigs []*StepConfig `protobuf:"bytes,7,rep,name=step_configs" json:"step_configs,omitempty"`
 }
 
 func (x *AbsorbRequest) Reset() { *x = AbsorbRequest{} }
@@ -201,6 +276,13 @@ func (x *AbsorbRequest) GetDebug() bool {
 		return x.Debug
 	}
 	return false
+}
+
+func (x *AbsorbRequest) GetStepConfigs() []*StepConfig {
+	if x != nil {
+		return x.StepConfigs
+	}
+	return nil
 }
 
 // A record created or updated during absorb.
@@ -360,6 +442,10 @@ type RecallRequest struct {
 
 	// Enable debug trace output.
 	Debug bool `protobuf:"varint,6,opt,name=debug" json:"debug,omitempty"`
+
+	// Pipeline step configurations resolved from published pipeline version.
+	// Required — engine will reject requests without step configs.
+	StepConfigs []*StepConfig `protobuf:"bytes,7,rep,name=step_configs" json:"step_configs,omitempty"`
 }
 
 func (x *RecallRequest) Reset() { *x = RecallRequest{} }
@@ -408,6 +494,13 @@ func (x *RecallRequest) GetDebug() bool {
 		return x.Debug
 	}
 	return false
+}
+
+func (x *RecallRequest) GetStepConfigs() []*StepConfig {
+	if x != nil {
+		return x.StepConfigs
+	}
+	return nil
 }
 
 // Recalled memories grouped under a single category.

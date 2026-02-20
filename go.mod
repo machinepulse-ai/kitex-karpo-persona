@@ -1,3 +1,3 @@
 module github.com/machinepulse-ai/kitex-karpo-persona
 
-go 1.25.7
+go 1.25.6
