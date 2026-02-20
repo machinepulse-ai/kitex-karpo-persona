@@ -92,6 +92,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
+	"ProvisionUser": kitex.NewMethodInfo(
+		provisionUserHandler,
+		newProvisionUserArgs,
+		newProvisionUserResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 }
 
 var (
@@ -1379,6 +1386,117 @@ func (p *GetUserStatsResult) GetResult() interface{} {
 	return p.Success
 }
 
+func provisionUserHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(karpo_persona.ProvisionUserRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(karpo_persona.PersonaEngineService).ProvisionUser(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *ProvisionUserArgs:
+		success, err := handler.(karpo_persona.PersonaEngineService).ProvisionUser(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*ProvisionUserResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newProvisionUserArgs() interface{} {
+	return &ProvisionUserArgs{}
+}
+
+func newProvisionUserResult() interface{} {
+	return &ProvisionUserResult{}
+}
+
+type ProvisionUserArgs struct {
+	Req *karpo_persona.ProvisionUserRequest
+}
+
+func (p *ProvisionUserArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *ProvisionUserArgs) Unmarshal(in []byte) error {
+	msg := new(karpo_persona.ProvisionUserRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var ProvisionUserArgs_Req_DEFAULT *karpo_persona.ProvisionUserRequest
+
+func (p *ProvisionUserArgs) GetReq() *karpo_persona.ProvisionUserRequest {
+	if !p.IsSetReq() {
+		return ProvisionUserArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *ProvisionUserArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *ProvisionUserArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type ProvisionUserResult struct {
+	Success *karpo_persona.ProvisionUserResponse
+}
+
+var ProvisionUserResult_Success_DEFAULT *karpo_persona.ProvisionUserResponse
+
+func (p *ProvisionUserResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *ProvisionUserResult) Unmarshal(in []byte) error {
+	msg := new(karpo_persona.ProvisionUserResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *ProvisionUserResult) GetSuccess() *karpo_persona.ProvisionUserResponse {
+	if !p.IsSetSuccess() {
+		return ProvisionUserResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *ProvisionUserResult) SetSuccess(x interface{}) {
+	p.Success = x.(*karpo_persona.ProvisionUserResponse)
+}
+
+func (p *ProvisionUserResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProvisionUserResult) GetResult() interface{} {
+	return p.Success
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -1494,6 +1612,16 @@ func (p *kClient) GetUserStats(ctx context.Context, Req *karpo_persona.GetUserSt
 	_args.Req = Req
 	var _result GetUserStatsResult
 	if err = p.c.Call(ctx, "GetUserStats", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) ProvisionUser(ctx context.Context, Req *karpo_persona.ProvisionUserRequest) (r *karpo_persona.ProvisionUserResponse, err error) {
+	var _args ProvisionUserArgs
+	_args.Req = Req
+	var _result ProvisionUserResult
+	if err = p.c.Call(ctx, "ProvisionUser", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

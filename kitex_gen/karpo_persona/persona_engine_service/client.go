@@ -22,6 +22,7 @@ type Client interface {
 	GetRecordSources(ctx context.Context, Req *karpo_persona.GetRecordSourcesRequest, callOptions ...callopt.Option) (r *karpo_persona.GetRecordSourcesResponse, err error)
 	GetRecordHistory(ctx context.Context, Req *karpo_persona.GetRecordHistoryRequest, callOptions ...callopt.Option) (r *karpo_persona.GetRecordHistoryResponse, err error)
 	GetUserStats(ctx context.Context, Req *karpo_persona.GetUserStatsRequest, callOptions ...callopt.Option) (r *karpo_persona.GetUserStatsResponse, err error)
+	ProvisionUser(ctx context.Context, Req *karpo_persona.ProvisionUserRequest, callOptions ...callopt.Option) (r *karpo_persona.ProvisionUserResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -106,4 +107,9 @@ func (p *kPersonaEngineServiceClient) GetRecordHistory(ctx context.Context, Req 
 func (p *kPersonaEngineServiceClient) GetUserStats(ctx context.Context, Req *karpo_persona.GetUserStatsRequest, callOptions ...callopt.Option) (r *karpo_persona.GetUserStatsResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetUserStats(ctx, Req)
+}
+
+func (p *kPersonaEngineServiceClient) ProvisionUser(ctx context.Context, Req *karpo_persona.ProvisionUserRequest, callOptions ...callopt.Option) (r *karpo_persona.ProvisionUserResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.ProvisionUser(ctx, Req)
 }

@@ -1592,6 +1592,86 @@ func (x *GetUserStatsResponse) GetLastUpdated() string {
 	return ""
 }
 
+// Request to provision a new user with graph data.
+type ProvisionUserRequest struct {
+	// User display name.
+	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+
+	// Persona template ID (snowflake int64). Required.
+	TemplateId int64 `protobuf:"varint,2,opt,name=template_id" json:"template_id,omitempty"`
+}
+
+func (x *ProvisionUserRequest) Reset() { *x = ProvisionUserRequest{} }
+
+func (x *ProvisionUserRequest) Marshal(in []byte) ([]byte, error) { return prutal.MarshalAppend(in, x) }
+
+func (x *ProvisionUserRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
+
+func (x *ProvisionUserRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ProvisionUserRequest) GetTemplateId() int64 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+// Response after successful user provisioning.
+type ProvisionUserResponse struct {
+	// Created user ID (snowflake int64).
+	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+
+	// Created agent ID (snowflake int64).
+	AgentId int64 `protobuf:"varint,2,opt,name=agent_id" json:"agent_id,omitempty"`
+
+	// Template ID used (snowflake int64).
+	TemplateId int64 `protobuf:"varint,3,opt,name=template_id" json:"template_id,omitempty"`
+
+	// User display name.
+	Name string `protobuf:"bytes,4,opt,name=name" json:"name,omitempty"`
+}
+
+func (x *ProvisionUserResponse) Reset() { *x = ProvisionUserResponse{} }
+
+func (x *ProvisionUserResponse) Marshal(in []byte) ([]byte, error) {
+	return prutal.MarshalAppend(in, x)
+}
+
+func (x *ProvisionUserResponse) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
+
+func (x *ProvisionUserResponse) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *ProvisionUserResponse) GetAgentId() int64 {
+	if x != nil {
+		return x.AgentId
+	}
+	return 0
+}
+
+func (x *ProvisionUserResponse) GetTemplateId() int64 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+func (x *ProvisionUserResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 type PersonaEngineService interface {
 	HealthCheck(ctx context.Context, req *HealthCheckRequest) (res *HealthCheckResponse, err error)
 	Absorb(ctx context.Context, req *AbsorbRequest) (res *AbsorbResponse, err error)
@@ -1604,4 +1684,5 @@ type PersonaEngineService interface {
 	GetRecordSources(ctx context.Context, req *GetRecordSourcesRequest) (res *GetRecordSourcesResponse, err error)
 	GetRecordHistory(ctx context.Context, req *GetRecordHistoryRequest) (res *GetRecordHistoryResponse, err error)
 	GetUserStats(ctx context.Context, req *GetUserStatsRequest) (res *GetUserStatsResponse, err error)
+	ProvisionUser(ctx context.Context, req *ProvisionUserRequest) (res *ProvisionUserResponse, err error)
 }
