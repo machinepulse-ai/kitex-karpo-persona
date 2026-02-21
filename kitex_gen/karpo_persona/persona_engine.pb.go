@@ -207,8 +207,8 @@ func (x *StepConfig) GetPromptBlocks() map[string]string {
 
 // Request to absorb conversation messages into memory.
 type AbsorbRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Conversation messages to absorb.
 	Messages []*Message `protobuf:"bytes,2,rep,name=messages" json:"messages,omitempty"`
@@ -216,8 +216,8 @@ type AbsorbRequest struct {
 	// Optional metadata key-value pairs.
 	Metadata map[string]string `protobuf:"bytes,3,rep,name=metadata" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 
-	// Pipeline ID (snowflake int64). Zero means use default.
-	PipelineId int64 `protobuf:"varint,4,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
+	// Pipeline ID (snowflake string). Empty means use default.
+	PipelineId string `protobuf:"bytes,4,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
 
 	// Optional pipeline version override.
 	PipelineVersion *int32 `protobuf:"varint,5,opt,name=pipeline_version" json:"pipeline_version,omitempty"`
@@ -236,11 +236,11 @@ func (x *AbsorbRequest) Marshal(in []byte) ([]byte, error) { return prutal.Marsh
 
 func (x *AbsorbRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *AbsorbRequest) GetUserId() int64 {
+func (x *AbsorbRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *AbsorbRequest) GetMessages() []*Message {
@@ -257,11 +257,11 @@ func (x *AbsorbRequest) GetMetadata() map[string]string {
 	return nil
 }
 
-func (x *AbsorbRequest) GetPipelineId() int64 {
+func (x *AbsorbRequest) GetPipelineId() string {
 	if x != nil {
 		return x.PipelineId
 	}
-	return 0
+	return ""
 }
 
 func (x *AbsorbRequest) GetPipelineVersion() int32 {
@@ -287,8 +287,8 @@ func (x *AbsorbRequest) GetStepConfigs() []*StepConfig {
 
 // A record created or updated during absorb.
 type RecordChange struct {
-	// Record ID (snowflake int64).
-	Id int64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	// Record ID (snowflake string).
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 
 	// Record content text.
 	Content string `protobuf:"bytes,2,opt,name=content" json:"content,omitempty"`
@@ -299,8 +299,8 @@ type RecordChange struct {
 	// Confidence score (0.0-1.0).
 	Confidence float64 `protobuf:"fixed64,4,opt,name=confidence" json:"confidence,omitempty"`
 
-	// IDs of records this one supersedes (snowflake int64).
-	SupersededIds []int64 `protobuf:"varint,5,rep,packed,name=superseded_ids" json:"superseded_ids,omitempty"`
+	// IDs of records this one supersedes (snowflake string).
+	SupersededIds []string `protobuf:"bytes,5,rep,name=superseded_ids" json:"superseded_ids,omitempty"`
 }
 
 func (x *RecordChange) Reset() { *x = RecordChange{} }
@@ -309,11 +309,11 @@ func (x *RecordChange) Marshal(in []byte) ([]byte, error) { return prutal.Marsha
 
 func (x *RecordChange) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *RecordChange) GetId() int64 {
+func (x *RecordChange) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *RecordChange) GetContent() string {
@@ -337,7 +337,7 @@ func (x *RecordChange) GetConfidence() float64 {
 	return 0
 }
 
-func (x *RecordChange) GetSupersededIds() []int64 {
+func (x *RecordChange) GetSupersededIds() []string {
 	if x != nil {
 		return x.SupersededIds
 	}
@@ -346,8 +346,8 @@ func (x *RecordChange) GetSupersededIds() []int64 {
 
 // Response from the absorb pipeline.
 type AbsorbResponse struct {
-	// Source ID (snowflake int64) for the created source.
-	SourceId int64 `protobuf:"varint,1,opt,name=source_id" json:"source_id,omitempty"`
+	// Source ID (snowflake string) for the created source.
+	SourceId string `protobuf:"bytes,1,opt,name=source_id" json:"source_id,omitempty"`
 
 	// Pipeline version used.
 	PipelineVersion int32 `protobuf:"varint,2,opt,name=pipeline_version" json:"pipeline_version,omitempty"`
@@ -374,11 +374,11 @@ func (x *AbsorbResponse) Marshal(in []byte) ([]byte, error) { return prutal.Mars
 
 func (x *AbsorbResponse) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *AbsorbResponse) GetSourceId() int64 {
+func (x *AbsorbResponse) GetSourceId() string {
 	if x != nil {
 		return x.SourceId
 	}
-	return 0
+	return ""
 }
 
 func (x *AbsorbResponse) GetPipelineVersion() int32 {
@@ -425,8 +425,8 @@ func (x *AbsorbResponse) GetDurationMs() int64 {
 
 // Request to recall memories matching a query.
 type RecallRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Query text for memory recall.
 	Query string `protobuf:"bytes,2,opt,name=query" json:"query,omitempty"`
@@ -434,8 +434,8 @@ type RecallRequest struct {
 	// Optional context key-value pairs.
 	Context map[string]string `protobuf:"bytes,3,rep,name=context" json:"context,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 
-	// Pipeline ID (snowflake int64). Zero means use default.
-	PipelineId int64 `protobuf:"varint,4,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
+	// Pipeline ID (snowflake string). Empty means use default.
+	PipelineId string `protobuf:"bytes,4,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
 
 	// Optional pipeline version override.
 	PipelineVersion *int32 `protobuf:"varint,5,opt,name=pipeline_version" json:"pipeline_version,omitempty"`
@@ -454,11 +454,11 @@ func (x *RecallRequest) Marshal(in []byte) ([]byte, error) { return prutal.Marsh
 
 func (x *RecallRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *RecallRequest) GetUserId() int64 {
+func (x *RecallRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *RecallRequest) GetQuery() string {
@@ -475,11 +475,11 @@ func (x *RecallRequest) GetContext() map[string]string {
 	return nil
 }
 
-func (x *RecallRequest) GetPipelineId() int64 {
+func (x *RecallRequest) GetPipelineId() string {
 	if x != nil {
 		return x.PipelineId
 	}
-	return 0
+	return ""
 }
 
 func (x *RecallRequest) GetPipelineVersion() int32 {
@@ -632,8 +632,8 @@ func (x *RecallResponse) GetDurationMs() int64 {
 
 // Request to list categories for a user.
 type GetUserCategoriesRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 }
 
 func (x *GetUserCategoriesRequest) Reset() { *x = GetUserCategoriesRequest{} }
@@ -644,17 +644,17 @@ func (x *GetUserCategoriesRequest) Marshal(in []byte) ([]byte, error) {
 
 func (x *GetUserCategoriesRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetUserCategoriesRequest) GetUserId() int64 {
+func (x *GetUserCategoriesRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 // Summary information about a single category.
 type CategoryInfo struct {
-	// Category ID (snowflake int64).
-	Id int64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	// Category ID (snowflake string).
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 
 	// Category name.
 	Name string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
@@ -672,11 +672,11 @@ func (x *CategoryInfo) Marshal(in []byte) ([]byte, error) { return prutal.Marsha
 
 func (x *CategoryInfo) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *CategoryInfo) GetId() int64 {
+func (x *CategoryInfo) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *CategoryInfo) GetName() string {
@@ -723,8 +723,8 @@ func (x *GetUserCategoriesResponse) GetCategories() []*CategoryInfo {
 
 // Request to retrieve the user's memory graph.
 type GetUserGraphRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Graph traversal depth (1-5, default 2).
 	Depth *int32 `protobuf:"varint,2,opt,name=depth" json:"depth,omitempty"`
@@ -736,11 +736,11 @@ func (x *GetUserGraphRequest) Marshal(in []byte) ([]byte, error) { return prutal
 
 func (x *GetUserGraphRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetUserGraphRequest) GetUserId() int64 {
+func (x *GetUserGraphRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *GetUserGraphRequest) GetDepth() int32 {
@@ -882,8 +882,8 @@ type TestPipelineRequest struct {
 	// Pipeline type.
 	PipelineType PipelineType `protobuf:"varint,1,opt,name=pipeline_type" json:"pipeline_type,omitempty"`
 
-	// Pipeline ID (snowflake int64).
-	PipelineId int64 `protobuf:"varint,2,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
+	// Pipeline ID (snowflake string).
+	PipelineId string `protobuf:"bytes,2,opt,name=pipeline_id" json:"pipeline_id,omitempty"`
 
 	// Optional pipeline version override.
 	PipelineVersion *int32 `protobuf:"varint,3,opt,name=pipeline_version" json:"pipeline_version,omitempty"`
@@ -905,11 +905,11 @@ func (x *TestPipelineRequest) GetPipelineType() PipelineType {
 	return PipelineType_PIPELINE_TYPE_UNSPECIFIED
 }
 
-func (x *TestPipelineRequest) GetPipelineId() int64 {
+func (x *TestPipelineRequest) GetPipelineId() string {
 	if x != nil {
 		return x.PipelineId
 	}
-	return 0
+	return ""
 }
 
 func (x *TestPipelineRequest) GetPipelineVersion() int32 {
@@ -967,8 +967,8 @@ func (x *TestPipelineResponse) GetDurationMs() int64 {
 
 // Request to list records for a user.
 type GetRecordsRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Optional category name filter.
 	Category *string `protobuf:"bytes,2,opt,name=category" json:"category,omitempty"`
@@ -986,11 +986,11 @@ func (x *GetRecordsRequest) Marshal(in []byte) ([]byte, error) { return prutal.M
 
 func (x *GetRecordsRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetRecordsRequest) GetUserId() int64 {
+func (x *GetRecordsRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *GetRecordsRequest) GetCategory() string {
@@ -1016,8 +1016,8 @@ func (x *GetRecordsRequest) GetOffset() int32 {
 
 // Detailed information about a single record.
 type RecordDetail struct {
-	// Record ID (snowflake int64).
-	Id int64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	// Record ID (snowflake string).
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 
 	// Record content text.
 	Content string `protobuf:"bytes,2,opt,name=content" json:"content,omitempty"`
@@ -1041,11 +1041,11 @@ func (x *RecordDetail) Marshal(in []byte) ([]byte, error) { return prutal.Marsha
 
 func (x *RecordDetail) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *RecordDetail) GetId() int64 {
+func (x *RecordDetail) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *RecordDetail) GetContent() string {
@@ -1124,8 +1124,8 @@ func (x *GetRecordsResponse) GetHasMore() bool {
 
 // Request to search records by vector similarity.
 type SearchRecordsRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Search query text.
 	Query string `protobuf:"bytes,2,opt,name=query" json:"query,omitempty"`
@@ -1143,11 +1143,11 @@ func (x *SearchRecordsRequest) Marshal(in []byte) ([]byte, error) { return pruta
 
 func (x *SearchRecordsRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *SearchRecordsRequest) GetUserId() int64 {
+func (x *SearchRecordsRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *SearchRecordsRequest) GetQuery() string {
@@ -1194,8 +1194,8 @@ func (x *SearchRecordsResponse) GetRecords() []*RecordDetail {
 
 // Request to list sources linked to a record.
 type GetRecordSourcesRequest struct {
-	// Record ID (snowflake int64).
-	RecordId int64 `protobuf:"varint,1,opt,name=record_id" json:"record_id,omitempty"`
+	// Record ID (snowflake string).
+	RecordId string `protobuf:"bytes,1,opt,name=record_id" json:"record_id,omitempty"`
 
 	// Max sources to return.
 	Limit int32 `protobuf:"varint,2,opt,name=limit" json:"limit,omitempty"`
@@ -1212,11 +1212,11 @@ func (x *GetRecordSourcesRequest) Marshal(in []byte) ([]byte, error) {
 
 func (x *GetRecordSourcesRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetRecordSourcesRequest) GetRecordId() int64 {
+func (x *GetRecordSourcesRequest) GetRecordId() string {
 	if x != nil {
 		return x.RecordId
 	}
-	return 0
+	return ""
 }
 
 func (x *GetRecordSourcesRequest) GetLimit() int32 {
@@ -1235,8 +1235,8 @@ func (x *GetRecordSourcesRequest) GetOffset() int32 {
 
 // Detailed information about a single source.
 type SourceDetail struct {
-	// Source ID (snowflake int64).
-	Id int64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	// Source ID (snowflake string).
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 
 	// Source type: "conversation", "image", "audio", "file".
 	SourceType string `protobuf:"bytes,2,opt,name=source_type" json:"source_type,omitempty"`
@@ -1260,11 +1260,11 @@ func (x *SourceDetail) Marshal(in []byte) ([]byte, error) { return prutal.Marsha
 
 func (x *SourceDetail) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *SourceDetail) GetId() int64 {
+func (x *SourceDetail) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *SourceDetail) GetSourceType() string {
@@ -1345,8 +1345,8 @@ func (x *GetRecordSourcesResponse) GetHasMore() bool {
 
 // Request to list history entries for a record.
 type GetRecordHistoryRequest struct {
-	// Record ID (snowflake int64).
-	RecordId int64 `protobuf:"varint,1,opt,name=record_id" json:"record_id,omitempty"`
+	// Record ID (snowflake string).
+	RecordId string `protobuf:"bytes,1,opt,name=record_id" json:"record_id,omitempty"`
 
 	// Max entries to return.
 	Limit int32 `protobuf:"varint,2,opt,name=limit" json:"limit,omitempty"`
@@ -1363,11 +1363,11 @@ func (x *GetRecordHistoryRequest) Marshal(in []byte) ([]byte, error) {
 
 func (x *GetRecordHistoryRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetRecordHistoryRequest) GetRecordId() int64 {
+func (x *GetRecordHistoryRequest) GetRecordId() string {
 	if x != nil {
 		return x.RecordId
 	}
-	return 0
+	return ""
 }
 
 func (x *GetRecordHistoryRequest) GetLimit() int32 {
@@ -1386,14 +1386,14 @@ func (x *GetRecordHistoryRequest) GetOffset() int32 {
 
 // A single history entry for a record.
 type RecordHistoryEntry struct {
-	// History entry ID (snowflake int64).
-	Id int64 `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	// History entry ID (snowflake string).
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 
-	// Record ID (snowflake int64).
-	RecordId int64 `protobuf:"varint,2,opt,name=record_id" json:"record_id,omitempty"`
+	// Record ID (snowflake string).
+	RecordId string `protobuf:"bytes,2,opt,name=record_id" json:"record_id,omitempty"`
 
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,3,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,3,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Category name.
 	Category string `protobuf:"bytes,4,opt,name=category" json:"category,omitempty"`
@@ -1417,25 +1417,25 @@ func (x *RecordHistoryEntry) Marshal(in []byte) ([]byte, error) { return prutal.
 
 func (x *RecordHistoryEntry) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *RecordHistoryEntry) GetId() int64 {
+func (x *RecordHistoryEntry) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
-func (x *RecordHistoryEntry) GetRecordId() int64 {
+func (x *RecordHistoryEntry) GetRecordId() string {
 	if x != nil {
 		return x.RecordId
 	}
-	return 0
+	return ""
 }
 
-func (x *RecordHistoryEntry) GetUserId() int64 {
+func (x *RecordHistoryEntry) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *RecordHistoryEntry) GetCategory() string {
@@ -1516,8 +1516,8 @@ func (x *GetRecordHistoryResponse) GetHasMore() bool {
 
 // Request to get statistics for a user.
 type GetUserStatsRequest struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 }
 
 func (x *GetUserStatsRequest) Reset() { *x = GetUserStatsRequest{} }
@@ -1526,17 +1526,17 @@ func (x *GetUserStatsRequest) Marshal(in []byte) ([]byte, error) { return prutal
 
 func (x *GetUserStatsRequest) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetUserStatsRequest) GetUserId() int64 {
+func (x *GetUserStatsRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 // Response containing user statistics.
 type GetUserStatsResponse struct {
-	// User ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// User ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
 	// Number of categories.
 	CategoryCount int32 `protobuf:"varint,2,opt,name=category_count" json:"category_count,omitempty"`
@@ -1557,11 +1557,11 @@ func (x *GetUserStatsResponse) Marshal(in []byte) ([]byte, error) { return pruta
 
 func (x *GetUserStatsResponse) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *GetUserStatsResponse) GetUserId() int64 {
+func (x *GetUserStatsResponse) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *GetUserStatsResponse) GetCategoryCount() int32 {
@@ -1597,8 +1597,8 @@ type ProvisionUserRequest struct {
 	// User display name.
 	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 
-	// Persona template ID (snowflake int64). Required.
-	TemplateId int64 `protobuf:"varint,2,opt,name=template_id" json:"template_id,omitempty"`
+	// Persona template ID (snowflake string). Required.
+	TemplateId string `protobuf:"bytes,2,opt,name=template_id" json:"template_id,omitempty"`
 }
 
 func (x *ProvisionUserRequest) Reset() { *x = ProvisionUserRequest{} }
@@ -1614,23 +1614,23 @@ func (x *ProvisionUserRequest) GetName() string {
 	return ""
 }
 
-func (x *ProvisionUserRequest) GetTemplateId() int64 {
+func (x *ProvisionUserRequest) GetTemplateId() string {
 	if x != nil {
 		return x.TemplateId
 	}
-	return 0
+	return ""
 }
 
 // Response after successful user provisioning.
 type ProvisionUserResponse struct {
-	// Created user ID (snowflake int64).
-	UserId int64 `protobuf:"varint,1,opt,name=user_id" json:"user_id,omitempty"`
+	// Created user ID (snowflake string).
+	UserId string `protobuf:"bytes,1,opt,name=user_id" json:"user_id,omitempty"`
 
-	// Created agent ID (snowflake int64).
-	AgentId int64 `protobuf:"varint,2,opt,name=agent_id" json:"agent_id,omitempty"`
+	// Created agent ID (snowflake string).
+	AgentId string `protobuf:"bytes,2,opt,name=agent_id" json:"agent_id,omitempty"`
 
-	// Template ID used (snowflake int64).
-	TemplateId int64 `protobuf:"varint,3,opt,name=template_id" json:"template_id,omitempty"`
+	// Template ID used (snowflake string).
+	TemplateId string `protobuf:"bytes,3,opt,name=template_id" json:"template_id,omitempty"`
 
 	// User display name.
 	Name string `protobuf:"bytes,4,opt,name=name" json:"name,omitempty"`
@@ -1644,25 +1644,25 @@ func (x *ProvisionUserResponse) Marshal(in []byte) ([]byte, error) {
 
 func (x *ProvisionUserResponse) Unmarshal(in []byte) error { return prutal.Unmarshal(in, x) }
 
-func (x *ProvisionUserResponse) GetUserId() int64 {
+func (x *ProvisionUserResponse) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
-func (x *ProvisionUserResponse) GetAgentId() int64 {
+func (x *ProvisionUserResponse) GetAgentId() string {
 	if x != nil {
 		return x.AgentId
 	}
-	return 0
+	return ""
 }
 
-func (x *ProvisionUserResponse) GetTemplateId() int64 {
+func (x *ProvisionUserResponse) GetTemplateId() string {
 	if x != nil {
 		return x.TemplateId
 	}
-	return 0
+	return ""
 }
 
 func (x *ProvisionUserResponse) GetName() string {
